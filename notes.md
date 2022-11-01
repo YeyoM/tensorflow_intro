@@ -49,21 +49,21 @@ In reinforcement learning we have a set of features and labels. The goal is to t
 
 Probabilistic modeling is the application of the principles of statistics to data analysis. It was one of the earliest forms of machine learning, and it’s still widely used to this day.
 
-#### Naive Bayes algorithm
+### Naive Bayes algorithm
 
 Naive Bayes is a type of machine-learning classifier based on applying Bayes’ theorem while assuming that the features in the input data are all independent (a strong, or “naive” assumption, which is where the name comes from).
 
-#### Logistic regression (logreg)
+### Logistic regression (logreg)
 
 Much like Naive Bayes, logreg predates computing by a long time, yet it’s still useful to this day, thanks to its simple and versatile nature. It’s often the first thing a data scientist will try on a dataset to get a feel for the classification task at hand.
 
-#### Early neural networks
+### Early neural networks
 
 The core ideas of neural networks were investigated in toy forms as early as the 1950s, the approach took decades to get started. For a long time, the missing piece was an efficient way to train large neural networks. 
 
 This changed in the mid-1980s, when multiple people independently rediscovered the Backpropagation algorithm— a way to train chains of parametric operations using gradient-descent optimization —and started applying it to neural networks.
 
-#### Kernel methods
+### Kernel methods
 
 Kernel methods are a group of classification algorithms, the best known of which is the support vector machine (SVM).
 
@@ -74,7 +74,7 @@ SVMs proceed to find these boundaries in two steps:
 1. The data is mapped to a new high-dimensional representation where the decision boundary can be expressed as a hyperplane.
 2. A good decision boundary (a separation hyperplane) is computed by trying to maximize the distance between the hyperplane and the closest data points from each class, a step called maximizing the margin. This allows the boundary to generalize well to new samples outside of the training dataset
 
-#### Decision trees, random forests, and gradient boosting machines
+### Decision trees, random forests, and gradient boosting machines
 
 Decision trees are flowchart-like structures that let you classify input data points or predict output values given inputs. They’re easy to visualize and interpret. in the 2000s they were often preferred to kernel methods because they were easier to train and tune.
 
@@ -83,7 +83,7 @@ In particular, the Random Forest algorithm introduced a robust, practical take o
 A gradient boosting machine, much like a random forest, is a machine-learning technique based on ensembling weak prediction models, generally decision trees. It uses gradient boosting, a way to improve any machine-learning model by iteratively training new models that specialize in addressing the weak points of the previous models.
 Applied to decision trees, the use of the gradient boosting technique results in models that strictly outperform random forests most of the time, while having similar properties.
 
-#### Back to neural networks
+### Back to neural networks
 
 In 2011, Dan Ciresan from IDSIA began to win academic image-classification competitions with GPU-trained deep neural networks—the first practical success of modern deep learning. But the watershed moment came in 2012, with the entry of Hinton’s group in the yearly large-scale image-classification challenge ImageNet.
 
@@ -91,5 +91,6 @@ In 2011, the top-five accuracy of the winning model, based on classical approach
 
 Since 2012, deep convolutional neural networks (convnets) have become the go-to algorithm for all computer vision tasks; more generally, they work on all perceptual tasks.
 
-#### What makes deep learning different?
+## Why deep learning?
+
 

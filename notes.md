@@ -91,6 +91,123 @@ In 2011, the top-five accuracy of the winning model, based on classical approach
 
 Since 2012, deep convolutional neural networks (convnets) have become the go-to algorithm for all computer vision tasks; more generally, they work on all perceptual tasks.
 
-## Why deep learning?
+## The mathematical building blocks of neural networks
 
+### First look at a neural network
 
+Let’s look at a concrete example of a neural network that uses the Python library Keras to learn to classify handwritten digits. The problem we’re trying to solve here is to classify grayscale images of handwritten digits (28 × 28 pixels) into their 10 categories (0 through 9). We’ll use the MNIST dataset, a classic in the machine-learning community, which has been around almost as long as the field itself and has been intensively studied. It’s a set of 60,000 training images, plus 10,000 test images.
+
+The MNIST dataset comes preloaded in Keras, in the form of a set of four Numpy arrays.
+
+1. Loading the MNIST dataset in Keras
+   
+    ```python
+    from keras.datasets import mnist
+    (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+    ```
+
+   train_images and train_labels form the training set, the data that the model will learn from. The model will then be tested on the test set, test_images and test_labels.
+
+   The images are encoded as Numpy arrays, and the labels are an array of digits, ranging from 0 to 9. The images and labels have a one-to-one correspondence.
+
+   If we take a loof at the training data:
+
+    ```python
+    >>> train_images.shape
+    (60000, 28, 28)
+    >>> len(train_labels)
+    60000
+    >>> train_labels
+    array([5, 0, 4, ..., 5, 6, 8], dtype=uint8)
+    ```
+
+   And the test data:
+
+    ```python
+    >>> test_images.shape
+    (10000, 28, 28)
+    >>> len(test_labels)
+    10000
+    >>> test_labels
+    array([7, 2, 1, ..., 4, 5, 6], dtype=uint8)
+    ```
+
+    The workflow will be as follow:
+
+    First we’ll feed the neural network the training data, train_images and train_labels. The network will then learn to associate images and labels.
+
+    Finally, we’ll ask the network to produce predictions for test_images, and we’ll verify if these predictions match the labels from test_labels.
+
+2. The network architecture
+   
+   ```python
+    from keras import models
+    from keras import layers
+
+    network = models.Sequential()
+    network.add(layers.Dense(512, activation='relu', input_shape=(28 * 28,)))
+    network.add(layers.Dense(10, activation='softmax'))
+   ```
+   
+   - Layer
+
+      A layer is a data-processing module that you can think of as a filter for data. Some data goes in, and it comes out in a more useful form. Specifically, layers extract representations out of the data fed into them—hopefully, representations that are more meaningful for the problem at hand. Most of deep learning consists of chaining together simple layers that will implement a form of progressive data distillation.
+
+       Here, our network consists of a sequence of two Dense layers, which are densely connected (also called fully connected) neural layers. The second (and last) layer is a 10-way softmax layer, which means it will return an array of 10 probability scores (summing to 1). Each score will be the probability that the current digit image belongs to one of our 10 digit classes.
+     
+3. Compilation Step
+  
+   To make the network ready for training, we need to pick three more things, as part of the compilation step:
+
+    - A loss function: How the network will be able to measure how good a job it is doing on its training data, and thus how it will be able to steer itself in the right direction.
+    - An optimizer: The mechanism through which the network will update itself based on the data it sees and its loss function.
+    - Metrics to monitor during training and testing: Here, we’ll only care about accuracy (the fraction of the images that were correctly classified).
+
+    ```python
+    network.compile(optimizer='rmsprop',
+                    loss='categorical_crossentropy',
+                    metrics=['accuracy'])
+    ```
+  
+4. Preparing the image data
+   
+   Before training, we’ll preprocess the data by reshaping it into the shape the network expects and scaling it so that all values are in the [0, 1] interval. Previously, our training images, for instance, were stored in an array of shape (60000, 28, 28) of type uint8 with values in the [0, 255] interval. We transform it into a float32 array of shape (60000, 28 * 28) with values between 0 and 1.
+
+    ```python
+    train_images = train_images.reshape((60000, 28 * 28))
+    train_images = train_images.astype('float32') / 255
+    
+    test_images = test_images.reshape((10000, 28 * 28))
+    test_images = test_images.astype('float32') / 255
+    ```
+
+5. Preparing the labels
+
+    We also need to categorically encode the labels.
+  
+    ```python
+    from keras.utils import to_categorical
+  
+    train_labels = to_categorical(train_labels)
+    test_labels = to_categorical(test_labels)
+    ```
+
+    We’re now ready to train the network, which in Keras is done via a call to the network’s fit method—we fit the model to its training data:
+
+    ```python
+    >>> network.fit(train_images, train_labels, epochs=5, batch_size=128)
+    Epoch 1/5
+    60000/60000 [==============================] - 9s - loss: 0.2588 - acc: 0.9254
+    Epoch 2/5
+    51328/60000 [=========================>....] - ETA: 1s  - loss: 0.1040 - acc: 0.9690
+    ```
+
+Two quantities are displayed during training: the loss of the network over the training data, and the accuracy of the network over the training data. We quickly reach an accuracy of 0.989 (98.9%) on the training data. Now let’s check that the model performs well on the test set, too:
+  
+  ```python
+  >>> test_loss, test_acc = network.evaluate(test_images, test_labels)
+  >>> print('test_acc:', test_acc)
+  test_acc: 0.9785  
+  ```
+
+The test-set accuracy turns out to be 97.8%—that’s quite a bit lower than the training set accuracy. This gap between training accuracy and test accuracy is an example of overfitting: the fact that machine-learning models tend to perform worse on new data than on their training data. 

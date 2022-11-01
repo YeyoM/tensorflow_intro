@@ -211,3 +211,11 @@ Two quantities are displayed during training: the loss of the network over the t
   ```
 
 The test-set accuracy turns out to be 97.8%—that’s quite a bit lower than the training set accuracy. This gap between training accuracy and test accuracy is an example of overfitting: the fact that machine-learning models tend to perform worse on new data than on their training data. 
+
+### Data Representation for Neural Networks
+
+#### Tensor
+
+At its core, a tensor is a container for data—almost always numerical data. So, it’s a container for numbers. You may be already familiar with matrices, which are 2D tensors: tensors are a generalization of matrices to an arbitrary number of dimensions (note that in the context of tensors, a dimension is often called an axis).
+
+#### Scalars (0D tensors)

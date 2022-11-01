@@ -313,3 +313,5 @@ print(train_images.shape)
 print(train_images.dtype)
 >>> uint8
 ```
+
+#### Manipulating tensors in Numpy

@@ -219,3 +219,97 @@ The test-set accuracy turns out to be 97.8%—that’s quite a bit lower than th
 At its core, a tensor is a container for data—almost always numerical data. So, it’s a container for numbers. You may be already familiar with matrices, which are 2D tensors: tensors are a generalization of matrices to an arbitrary number of dimensions (note that in the context of tensors, a dimension is often called an axis).
 
 #### Scalars (0D tensors)
+
+A tensor that contains only one number is called a scalar. In Numpy, a float32 or float64 number is a scalar tensor (or scalar array). You can display the number of axes of a Numpy tensor via the ndim attribute; a scalar tensor has 0 axes (ndim == 0). The number of axes of a tensor is also called its rank. Here’s a Numpy scalar:
+
+```python
+import numpy as np
+x = np.array(12)
+x
+>>> 12
+x.ndim
+>>> 0
+```
+
+#### Vectors (1D tensors)
+
+An array of numbers is called a vector, or 1D tensor. A 1D tensor is said to have exactly one axis. Following is a Numpy vector:
+
+```python	
+x = np.array([12, 3, 6, 14, 5])
+x
+>>> array([12, 3, 6, 14, 5])
+x.ndim
+>>> 1
+```
+
+This vector has five entries and so is called a 5-dimensional vector. Don’t confuse a 5D vector with a 5D tensor! A 5D vector has only one axis and has five dimensions along its axis, whereas a 5D tensor has five axes (and may have any number of dimensions along each axis). Dimensionality can denote either the number of entries along a specific axis (as in the case of our 5D vector) or the number of axes in a tensor (such as a 5D tensor), which can be confusing at times. In the latter case, it’s technically more correct to talk about a tensor of rank 5 (the rank of a tensor being the number of axes), but the ambiguous notation 5D tensor is common regardless. 
+
+#### Matrices (2D tensors)
+
+An array of vectors is a matrix, or 2D tensor. A matrix has two axes (often referred to rows and columns). You can visually interpret a matrix as a rectangular grid of numbers. This is a Numpy matrix:
+
+```python
+x = np.array([[5, 78, 2, 34, 0],
+              [6, 79, 3, 35, 1],
+              [7, 80, 4, 36, 2]])
+x.ndim
+>>> 2
+```
+
+#### 3D tensors and higher-dimensional tensors
+
+If you pack such matrices in a new array, you obtain a 3D tensor, which you can visually interpret as a cube of numbers. In general, an array of n matrices is a 3D tensor:
+
+```python
+x = np.array([[[5, 78, 2, 34, 0],
+               [6, 79, 3, 35, 1],
+               [7, 80, 4, 36, 2]],
+               [[5, 78, 2, 34, 0],
+               [6, 79, 3, 35, 1],
+               [7, 80, 4, 36, 2]],
+               [[5, 78, 2, 34, 0],
+               [6, 79, 3, 35, 1],
+               [7, 80, 4, 36, 2]]])
+x.ndim
+>>> 3
+```
+
+In deep learning, you’ll generally manipulate tensors that are 0D to 4D, although you may go up to 5D if you process video data.
+
+#### Key attributes
+
+A tensor is defined by three key attributes:
+
+1. Number of axes (rank)
+   For instance, a 3D tensor has three axes, and a matrix has two axes. This is also called the tensor’s ndim (number of dimensions).
+
+2. Shape
+   This is a tuple of integers that describes how many dimensions the tensor has along each axis. For instance, the previous matrix example has shape (3, 5), and the 3D tensor example has shape (3, 3, 5). A vector has a shape with a single element, such as (5,), and a scalar has an empty shape, ().
+
+3. Data Type (dtype)
+   This is the type of the data contained in the tensor; for instance, a tensor’s type could be float32, uint8, float64, and so on. On rare occasions, you may see a char tensor
+
+In the example of the MNIST dataset we have the following tensors:
+
+So what we have here is a 3D tensor of 8-bit integers. More precisely, it’s an array of 60,000 matrices of 28 × 8 integers. Each such matrix is a grayscale image, with coefficients between 0 and 255.
+
+We can check the above with the following code:
+
+```python
+# load the MNIST dataset
+from keras.datasets import mnist
+(train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+
+# number of axes
+print(train_images.ndim)
+>>> 3
+
+# check the shape of the tensor
+print(train_images.shape)
+>>> (60000, 28, 28)
+
+# check the data type
+print(train_images.dtype)
+>>> uint8
+```

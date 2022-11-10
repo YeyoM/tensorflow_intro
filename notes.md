@@ -314,4 +314,57 @@ print(train_images.dtype)
 >>> uint8
 ```
 
-#### Manipulating tensors in Numpy
+### The gears of neural networks: tensor operations
+
+Much as any computer program can be ultimately reduced to a small set of binary operations on binary inputs (AND, OR, NOR, and so on), all transformations learned by deep neural networks can be reduced to a handful of tensor operations applied to tensors of numeric data. For instance, it’s possible to add tensors, multiply tensors, and so on.
+
+In our initial example, we were building our network by stacking Dense layers on top of each other. A Keras layer instance looks like this:
+
+```python
+keras.layers.Dense(512, activation='relu')
+```
+
+This layer can be interpreted as a function, which takes as input a 2D tensor and returns another 2D tensor—a new representation for the input tensor. Specifically, the function is as follows (where W is a 2D tensor and b is a vector, both attributes of the layer):
+
+```python
+output = relu(dot(W, input) + b)
+```
+
+Let’s unpack this. We have three tensor operations here: a dot product (dot) between the input tensor and a tensor named W; an addition (+) between the resulting 2D tensor and a vector b; and, finally, a relu operation. relu(x) is max(x, 0).
+
+Linear algebra concepts we dont need to dive into, if you know them, great, if not, no worries.
+
+#### Element-wise operations
+
+The relu operation and addition are element-wise operations: operations that are applied independently to each entry in the tensors being considered.
+
+If you want to write a naive Python implementation of an element-wise operation, you use a for loop, as in this naive implementation of an element-wise relu operation:
+
+```python
+def naive_relu(x):
+   assert len(x.shape) == 2  # x is a 2D Numpy tensor
+
+   x = x.copy()  # Avoid overwriting the input tensor
+
+   for i in range(x.shape[0]):
+       for j in range(x.shape[1]):
+           x[i, j] = max(x[i, j], 0)
+   
+   return x
+```
+
+This naive implementation is not efficient, but it’s easy to understand. It’s also easy to add other element-wise operations, such as an element-wise addition.
+
+```python
+def naive_add(x, y):
+   assert len(x.shape) == 2  # x and y are 2D Numpy tensors
+   assert x.shape == y.shape
+
+   x = x.copy()  # Avoid overwriting the input tensor
+
+   for i in range(x.shape[0]):
+       for j in range(x.shape[1]):
+           x[i, j] += y[i, j]
+   
+   return x
+```

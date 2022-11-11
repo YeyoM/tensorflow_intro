@@ -368,3 +368,25 @@ def naive_add(x, y):
    
    return x
 ```
+
+On the same principle, you can do element-wise multiplication, subtraction, and so on. In practice, when dealing with Numpy arrays, these operations are available as welloptimized built-in Numpy functions, which themselves delegate the heavy lifting to a Basic Linear Algebra Subprograms (BLAS) implementation if you have one installed (which you should). BLAS are low-level, highly parallel, efficient tensor-manipulation routines that are typically implemented in Fortran or C.
+
+So, in Numpy, you can do the following element-wise operation, and it will be blazing fast:
+
+```python
+import numpy as np
+
+z = x + y
+
+z = np.maximum(z, 0.)
+```
+
+#### Broadcasting
+
+Our earlier naive implementation of naive_add only supports the addition of 2D tensors with identical shapes. But in the Dense layer introduced earlier, we added a 2D tensor with a vector. What happens with addition when the shapes of the two tensors being added differ?
+
+When possible, and if there’s no ambiguity, the smaller tensor will be broadcasted to match the shape of the larger tensor. Broadcasting consists of two steps:
+
+1. Axes (called broadcast axes) are added to the smaller tensor to match the ndim of the larger tensor.
+   
+2. The smaller tensor is repeated alongside these new axes to match the full shape of the larger tensor.

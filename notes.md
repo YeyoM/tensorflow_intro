@@ -420,3 +420,42 @@ Uncrumpling paper balls is what machine learning is about: finding neat represen
 
 #### The engine of neural networks: gradient-based optimization
 
+Lets pretend we have a network, where each layer of it, transforms the data input as follows:
+
+```python
+output = relu(dot(W, input) + b)
+```
+
+In this expression, W and b are tensors that are attributes of the layer. They’re called the weights or trainable parameters of the layer (the kernel and bias attributes, respectively). These weights contain the information learned by the network from exposure to training data.
+
+Initially, these weight matrices are filled with small random values (a step called random initialization). Of course, there’s no reason to expect that relu(dot(W, input) + b), when W and b are random, will yield any useful representations. The resulting representations are meaningless—but they’re a starting point. What comes next is to gradually adjust these weights, based on a feedback signal. This gradual adjustment, also called training, is basically the learning that machine learning is all about.
+
+This happens within what’s called a training loop, which works as follows.
+
+1. Draw a batch of training samples x and corresponding targets y.
+2. Run the network on x (a step called forward pass), obtaining predictions y_pred.
+3. Compute the loss of the network on the batch, a measure of the mismatch between y_pred and y.
+4. Update all weights of the network in a way that slightly reduces the loss on this batch.
+
+You’ll eventually end up with a network that has a very low loss on its training data: a low mismatch between predictions y_pred and expected targets y. The network has “learned” to map its inputs to correct targets. From afar, it may look like magic, but when you reduce it to elementary steps, it turns out to be simple.
+
+Step 1 sounds easy enough—just I/O code. Steps 2 and 3 are merely the application of a handful of tensor operations, so you could implement these steps purely from what you learned in the previous section. The difficult part is step 4: updating the network’s weights. Given an individual weight coefficient in the network, how can you compute whether the coefficient should be increased or decreased, and by how much?
+
+We can take advantage of of the fact that all operations used in the network are differentiable, and compute the gradient of the loss with regard of the network's coeffiecients.
+
+#### Stochastic gradient descent
+
+Given a differentiable function, it’s theoretically possible to find its minimum analytically: it’s known that a function’s minimum is a point where the derivative is 0, so all you have to do is find all the points where the derivative goes to 0 and check for which of these points the function has the lowest value.
+
+Applied to a neural network, that means finding analytically the combination of weight values that yields the smallest possible loss function. This can be done by solving the equation gradient(f)(W) = 0 for W. This is a polynomial equation of N variables, where N is the number of coefficients in the network. Although it would be possible to solve such an equation for N = 2 or N = 3, doing so is intractable for real neural networks, where the number of parameters is never less than a few thousand and can often be several tens of millions.
+
+Instead, you can use the four-step algorithm outlined at the beginning of this section: modify the parameters little by little based on the current loss value on a random batch of data. Because you’re dealing with a differentiable function, you can compute its gradient, which gives you an efficient way to implement step 4. If you update the weights in the opposite direction from the gradient, the loss will be a little less every time:
+
+1. Draw a batch of training samples x and corresponding targets y.
+2. Run the network on x to obtain predictions y_pred.
+3. Compute the loss of the network on the batch, a measure of the mismatch between y_pred and y.
+4. Compute the gradient of the loss with regard to the network’s parameters (a backward pass).
+5. Move the parameters a little in the opposite direction from the gradient—for example W -= step * gradient—thus reducing the loss on the batch a bit.
+
+### Looking back to the first example
+
